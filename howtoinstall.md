@@ -5,14 +5,14 @@
 ### - Extract Zip
 
 ## 2. Create a json file as the main file
-## 3. Create "run.sh" file with this code
-'''
-python3 src/main.py (your json file directory)
-'''
-## 4. Run the shell script
+
+## 3. Run using `python3 src/main.py (your json file directory)`
+### You can also use bat file
+#### - Create run.bat file
+#### - Fill it with this code `python3 src/main.py (your json file directory)`
+#### - Run it with `run` in terminal
 
 # I get a error
-
 ## python3 is not a command
 - Check that if your python has been installed or added to the system env
 - Try replacing the python3 with "py" or "python"

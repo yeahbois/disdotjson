@@ -1,5 +1,5 @@
 #                 READ LISENCE FILE                     #
-#                     Dis.json                          #
+#                Dis.json version 1.0                   #
 
 '''
 Imports
@@ -16,8 +16,9 @@ import random
 import re
 import sys
 import time
-from . import errors
-from functions import *
+import requests
+import errors
+import functions
 
 '''
 Get JSON file and the content
@@ -66,6 +67,51 @@ bot = commands.Bot(command_prefix=_bot_prefix, intents=intents)
 '''
 Functions
 '''
+def _compile_variable(text:str, commands:dict, message: discord.Message):
+    def _compile_scriptv1(text, commands:dict, message: discord.Message):
+        text = text.replace("script:", "")
+        textAlf = []
+        for item in list(text):
+            textAlf.append(item)
+        if textAlf[0] == " ":
+            textAlf.pop(0)
+        text = "".join(textAlf)
+        result = _compile_function(text, commands, message)
+        return result
+
+    def _compile_scriptv2(text, commands:dict, message: discord.Message):
+        text = text.replace("scriptv2:", "")
+        textAlf = []
+        for item in list(text):
+            textAlf.append(item)
+        if textAlf[0] == " ":
+            textAlf.pop(0)
+        text = "".join(textAlf)
+        splitted = text.split(" ")
+        for texts in splitted:
+            if texts.startswith("%"):
+                result = _compile_function(texts, commands, message)
+                splitted[splitted.index(texts)] = result
+        return " ".join(splitted)
+    splitted = text.split(" ")
+    for texts in splitted:
+        if texts.startswith("$"):
+            commandsIndex = _file['commands'].index(commands)
+            vars = _file['commands'][commandsIndex]['variables']
+            try:
+                varResult = vars[texts]
+                if varResult.startswith("script:"):
+                    _result = str(_compile_scriptv1(varResult, commands, message))
+                elif varResult.startswith("scriptv2:"):
+                    _result = str(_compile_scriptv2(varResult, commands, message))
+                else:
+                    _result = varResult
+                splitted[splitted.index(texts)] = str(_result)
+            except:
+                pass
+
+    return " ".join(splitted)
+
 def _compile_function(text:str, commands:dict, message: discord.Message):
     arguments = re.findall(r'\(.*?\)', text)
     argList = []
@@ -85,6 +131,8 @@ def _compile_function(text:str, commands:dict, message: discord.Message):
         return arg[0].lower()
     elif text.startswith("%string.upper"):
         return arg[0].upper()
+    elif text.startswith("%string.capitalize"):
+        return arg[0].capitalize()
     elif text.startswith("%random.random"):
         return random.random()
     elif text.startswith("%message.author.name"):
@@ -93,7 +141,9 @@ def _compile_function(text:str, commands:dict, message: discord.Message):
         return message.author.id
     elif text.startswith("%message.author.mention"):
         return message.author.mention
-    elif text.startswith("%getMessageArg"):
+    elif text.startswith("%message.author.avatarUrl"):
+        return message.author.avatar.url
+    elif text.startswith("%message.getArg"):
         return message.content.split(" ")[int(arg[0]) + 1]
     elif text.startswith("%time.unix"):
         return time.time()
@@ -107,54 +157,29 @@ def _compile_function(text:str, commands:dict, message: discord.Message):
             else:
                 raise errors.SystemError("Invalid character in math.count()")
         return eval("".join(inputList))
+    elif text.startswith("%requests.get.json"):
+        if not arg[0]:
+            raise errors.MissingRequiredParameter("Missing url in %requests.get()")
+        if not arg[1]:
+            return requests.get(arg[0]).json()
+        else:
+            return requests.get(arg[0]).json()[arg[1]]
+    elif text.startswith("%requests.get.text"):
+        if not arg[0]:
+            raise errors.MissingRequiredParameter("Missing url in %requests.get()")
+        return requests.get(arg[0]).text
+    elif text.startswith("%check.integer"):
+        if arg[0].isdigit():
+            return "true"
+        else:
+            return "false"
+    elif text.startswith("%check.string"):
+        if arg[0].isalpha():
+            return "true"
+        else:
+            return "false"
     else:
         pass
-
-def _compile_scriptv1(text, commands:dict, message: discord.Message):
-    text = text.replace("script:", "")
-    textAlf = []
-    for item in list(text):
-        textAlf.append(item)
-    if textAlf[0] == " ":
-        textAlf.pop(0)
-    text = "".join(textAlf)
-    result = _compile_function(text, commands, message)
-    return result
-
-def _compile_scriptv2(text, commands:dict, message: discord.Message):
-    text = text.replace("scriptv2:", "")
-    textAlf = []
-    for item in list(text):
-        textAlf.append(item)
-    if textAlf[0] == " ":
-        textAlf.pop(0)
-    text = "".join(textAlf)
-    splitted = text.split(" ")
-    for texts in splitted:
-        if texts.startswith("%"):
-            result = _compile_function(texts, commands, message)
-            splitted[splitted.index(texts)] = result
-    return " ".join(splitted)
-
-def _compile_variable(text:str, commands:dict, message: discord.Message):
-    splitted = text.split(" ")
-    for texts in splitted:
-        if texts.startswith("$"):
-            commandsIndex = _file['commands'].index(commands)
-            vars = _file['commands'][commandsIndex]['variables']
-            try:
-                varResult = vars[texts]
-                if varResult.startswith("script:"):
-                    _result = str(_compile_scriptv1(varResult, commands, message))
-                elif varResult.startswith("scriptv2:"):
-                    _result = str(_compile_scriptv2(varResult, commands, message))
-                else:
-                    _result = varResult
-                splitted[splitted.index(texts)] = str(_result)
-            except:
-                pass
-
-    return " ".join(splitted)
 
 async def trigger(message: discord.Message, commands:dict, response):
     if response['name'] == "sendMessage":

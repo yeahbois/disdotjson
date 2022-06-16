@@ -55,7 +55,80 @@ What is the difference? The difference between script and scriptv2 just, script 
 "$variablename": "script": "%user.name"
 ```
 # Functions
-Coming Soon
+## Random
+### - number(from:integer; to:integer)
+#### Return a random number
+#### %random.number(1, 100)
+
+### - string(choices)
+#### Return a random text
+#### %random.string(choice1; choice2; choice3; untilInfinity)
+
+### - random()
+#### Return a random float
+#### %random.random()
+
+## String
+### - lower(text:string)
+#### Return the text but in lower
+#### %string.lower(mY sTrInG) | out: my string 
+
+### - upper(text:string)
+#### Return the text but in upper
+#### %string.upper(my string) | out: MY STRING
+
+### - capitalize(text:string)
+#### Return the text but in capitalize
+#### %string.capitalize(my string) | out: My string
+
+## Message
+### - getArg(index:integer)
+### Return the argument using the index
+### %message.getArg(1)
+
+### - author.name()
+### Return the author name
+### %message.author.name()
+
+### - author.id()
+### Return the author id
+### %message.author.id()
+
+### - author.mention()
+### Return the author mention
+### %message.author.mention()
+
+### - author.avatarUrl()
+### Return the author avatar url
+### %message.author.avatarUrl()
+
+## Time
+### - unix()
+### Return the unix time (how many seconds from `00:00:00 UTC January 1 1970`)
+### %time.unix()
+
+## Math
+### - count(math)
+### Count math
+### %math.count(1 + 6 * 65 ^ 3/4 ** (12.3 / 0.1) - 1 // 70)
+
+## Requests
+### - get.json(url; key)
+### Make a request and get the json result
+### %requests.get.json(https://myapi.com/api?key=yes; result)
+
+### - get.text(url)
+### Make a request and get the text result
+### %requests.get.text(https://myapi.com/api?key=yes)
+
+## Check
+### - string(something)
+### Check if the argument are string. It will return true or false
+### %check.string(1232) | out: false
+
+### - integer(something)
+### Check if the argument are integer. It will return true or false
+### %check.integer(1234) | out: true
 
 # Trigger Types
 Coming Soon
