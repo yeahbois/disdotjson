@@ -1,3 +1,12 @@
+#                 READ LISENCE FILE                     #
+#                     Dis.json                          #
+
+'''
+Imports
+
+Required:
+READ requirements.txt
+'''
 import discord
 from discord.ext import commands
 import json
@@ -6,27 +15,27 @@ import os
 import random
 import re
 import sys
+import time
+from . import errors
+from functions import *
 
-class MissingRequiredParameter(Exception):
-    pass
-
-class NoResult(Exception):
-    pass
-
-filename = "jsoncord.json"
+'''
+Get JSON file and the content
+'''
 try:
     filename = sys.argv[1]
 except:
-    print("You must enter a file name ex: python main.py <file name>")
-    sys.exit()
+    raise errors.MissingRequiredParameter("You must enter the json file directory")
 
-<<<<<<< HEAD
 with open(f"{filename}", 'r') as f:
-=======
-with open(f"../{filename}", 'r') as f:
->>>>>>> 06a4bc102606f21403f84366c0f7485ab7b3268c
     _file = json.load(f)['bot']
 
+'''
+Get the bot required parameter
+- Token
+- Prefix
+- Commands
+'''
 try:
     _bot_token = _file['token']
     if _bot_token.startswith("readEnv:"):
@@ -35,31 +44,28 @@ try:
         try:
             _bot_token = os.getenv(envName)
         except Exception as e:
-            print("Environment Error: {}".format(e))
-            sys.exit()
-
+            raise errors.SystemError("Error in environment: {}".format(e))
 except KeyError:
-    raise MissingRequiredParameter("Token is missing in your JSON file")
-    sys.exit()
+    raise errors.MissingRequiredParameter("Token is missing in your JSON file")
 try:
     _bot_prefix = _file['prefix']
 except KeyError:
-    raise MissingRequiredParameter("Prefix is missing in your JSON file")
-    sys.exit()
+    raise errors.MissingRequiredParameter("Prefix is missing in your JSON file")
 try:
     _bot_commands = _file['commands']
 except:
-    raise MissingRequiredParameter("Commands is missing in your JSON file")
-    sys.exit()
+    raise errors.MissingRequiredParameter("Commands is missing in your JSON file")
 
+'''
+Creating the client using py-cord
+'''
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix=_bot_prefix, intents=intents)
 
-@bot.event
-async def on_ready():
-    print("Your bot is ready")
-
+'''
+Functions
+'''
 def _compile_function(text:str, commands:dict, message: discord.Message):
     arguments = re.findall(r'\(.*?\)', text)
     argList = []
@@ -89,6 +95,18 @@ def _compile_function(text:str, commands:dict, message: discord.Message):
         return message.author.mention
     elif text.startswith("%getMessageArg"):
         return message.content.split(" ")[int(arg[0]) + 1]
+    elif text.startswith("%time.unix"):
+        return time.time()
+    elif text.startswith("%math.count"):
+        values = list(arg[0])
+        whitelist = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+", "-", "*", "/", "^", ".", "(", ")", " ", ","]
+        inputList = []
+        for alf in values:
+            if alf in whitelist:
+                inputList.append(alf)
+            else:
+                raise errors.SystemError("Invalid character in math.count()")
+        return eval("".join(inputList))
     else:
         pass
 
@@ -141,23 +159,20 @@ def _compile_variable(text:str, commands:dict, message: discord.Message):
 async def trigger(message: discord.Message, commands:dict, response):
     if response['name'] == "sendMessage":
         try:
-<<<<<<< HEAD
             await message.channel.send(_compile_variable(response['value'], commands, message))
         except Exception as e:
             print(e)
-=======
-            await message.channel.send(response['value'])
-        except Exception as e:
-            pass
-    elif response['name'] == "banMember":
-        try:
-            await message.guild.ban(response['userID'], reason=response['reason'])
-        except:
-            pass
->>>>>>> 06a4bc102606f21403f84366c0f7485ab7b3268c
     else:
-        raise NoResult("Trigger {} not found! Try read the documentation at https://github.com/yeahbois/jsoncord/readme.md".format(response['name']))
-        sys.exit()
+        raise errors.NoResult("Trigger {} not found! Try read the documentation at https://github.com/yeahbois/disdotjson/blob/master/README.md".format(response['name']))
+
+@bot.event
+async def on_ready():
+    print("Your bot is ready")
+    print(f'''
+Name: {bot.user.name}#{bot.user.discriminator}
+ID: {bot.user.id}
+Command Count: {len(_file['commands'])}
+    ''')
 
 @bot.event
 async def on_message(message):
@@ -167,6 +182,5 @@ async def on_message(message):
                 await trigger(message, commands, response)
         else:
             pass
-
 
 bot.run(_bot_token)

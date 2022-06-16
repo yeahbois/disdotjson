@@ -7,7 +7,7 @@
 ## 2. Create a json file as the main file
 ## 3. Create "run.sh" file with this code
 '''
-python3 src/main.py <ENTER YOUR JSONFILE DIRECTORY HERE>
+python3 src/main.py (your json file directory)
 '''
 ## 4. Run the shell script
 

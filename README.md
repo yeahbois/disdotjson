@@ -1,5 +1,5 @@
 # Dis.json
-## Read the [how to install](https://github.com/yeahbois/disdotjson/howtoinstall.md)
+## Read the [how to install](https://github.com/yeahbois/disdotjson/blob/master/howtoinstall.md)
 Discord Bot but in JSON. Writen in pycord module
 
 ## How to use ?
