@@ -1,0 +1,43 @@
+{
+    "bot": {
+        "prefix": "?",
+        "settings": {},
+        "data": [
+            {"name": "money", "defaultValue": 10},
+            {"name": "start", "defaultValue": false}
+        ],
+        "commands": [
+            {"name": "start", "trigger": [
+                {"name": "checkUserData", "value": "$dataValue == true", "trigger": [
+                    {"name": "sendMessage", "value": "You already start your account"}
+                ]},
+                {"name": "sendMessage", "value": "Successfully create your account"},
+                {"name": "updateUserData", "dataName": "start", "newValue": true}
+            ], "variables": {
+                "dataValue": "script: %getUserData: start"
+            }},
+            {"name": "beg", "trigger": [
+                {"name": "checkUserData", "value": "$dataValue == false", "trigger": [
+                    {"name": "sendMessage", "value": "You must use start command"}
+                ]},
+                {"name": "sendMessage", "value": "$message"},
+                {"name": "updateUserData", "dataName": "money", "newValue": "$newValue"}
+            ], "variables": {
+                "dataValue": "script: %getUserData: start",
+                "message": "script: %randomText: You get $amount from begging,Neptune gave you $amount",
+                "amount": "script: %randomNumber: 1,100",
+                "newValue": "script: %doMath: $userMoney+$amount",
+                "userMoney": "script: %getUserdata: money"
+            }},
+            {"name": "embed", "trigger": [
+                {"name": "sendEmbed", "value": {
+                    "title": "My Embed Title",
+                    "color": "blue",
+                    "fields": [
+                        {"name": "field 1", "value": "value", "inline": true}
+                    ]
+                }}
+            ], "variables": {}}
+        ]
+    }
+}

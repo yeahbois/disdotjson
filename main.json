@@ -1,0 +1,28 @@
+{
+    "bot": {
+        "prefix": "?",
+        "token": "readEnv: token",
+        "commands": [
+            {"name": "help", "trigger": [
+                {"name": "sendMessage", "value": "This bot is just for testing Dis.json lol"}
+            ]},
+            {"name": "variabletest", "trigger": [
+                {"name": "sendMessage", "value": "Hi $variable"},
+                {"name": "sendMessage", "value": "Test"}
+            ], "variables": {
+                "$variable": "script: %message.author.name()"
+            }},
+            {"name": "ban", "trigger": [
+                {"name": "sendMessage", "value": "You are banned!"},
+                {"name": "banMember", "userID": "$userID", "reason": "because ur gay wkwkwkwk $reason"}
+            ], "variables": {
+                "$userID": "script: %message.author.id()",
+                "$reason": "scriptv2: %message.author.name() heheehehhehehehe"
+            }}
+        ],
+        "comment": {
+            "invite": "https://discord.com/api/oauth2/authorize?client_id=981438333110591518&permissions=8&scope=bot%20applications.commands",
+            "clientID": "981438333110591518"
+        }
+    }
+}
