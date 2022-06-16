@@ -2,6 +2,12 @@
 ## Read the [how to install](https://github.com/yeahbois/disdotjson/blob/master/howtoinstall.md)
 Discord Bot but in JSON. Writen in pycord module
 
+## Update!
+### Version: 1.0
+### Date: 16/06/2022
+### Changelog:
+#### - Initial release
+
 ## How to use ?
 Create a JSON file
 ```json
