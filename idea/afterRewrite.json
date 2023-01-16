@@ -1,0 +1,18 @@
+{
+    "settings": {
+        "prefix": ["?", "!"],
+        "prefixNoSpace": true, // if this set to true, you cant use the prefix like ? help
+        "token": "ENV: DISCORD_TOKEN",
+        "format": "1.0"
+    },
+    "commands": [
+        {"id": "ping", "name": "ping", "trigger": [
+            {"type": "send message", "message": "Hello, world!"}
+        ]},
+        {"id": "hello", "name": "hello", "options": [
+            {"id": "name", "name": "Name", "type": "string", "required": true, "ifNull": {"type": "send message", "message": "You doesnt include name"}}
+        ], "trigger": [
+            {"type": "send message", "message": "Hello $variable", "variables": {"variable": "option('name')"}}
+        ]}
+    ]
+}
