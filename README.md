@@ -1,15 +1,21 @@
 # Dis.json
-## Read the [how to install](https://github.com/yeahbois/disdotjson/blob/master/howtoinstall.md)
-Discord Bot but in JSON. Writen in pycord module
 
-## Update!
-### Version: 1.0
-### Date: 16/06/2022
-### Changelog:
-#### - Initial release
+## 📌 Read the [Installation Guide](https://github.com/yeahbois/disdotjson/blob/master/howtoinstall.md)
+A **Discord Bot** configured entirely in **JSON**, powered by the `pycord` module.
 
-## How to use ?
-Create a JSON file
+---
+
+## 🚀 Update Log
+### 🔹 Version: `1.0`
+### 📅 Release Date: `16/06/2022`
+### 📜 Changelog:
+- 🆕 Initial release
+
+---
+
+## 🔧 How to Use?
+Create a JSON configuration file:
+
 ```json
 {
     "bot": {
@@ -20,121 +26,142 @@ Create a JSON file
 }
 ```
 
-### Keys
-In the "bot" keys you must enter a object valued by:
-- **Token**: You must enter your bot token. You can use read env too! by using `readEnv: <environment name>` as the token value
-- **Prefix**: Here is your bot prefix
-- **Commands**: A list that valued by the commands
+### 🔑 Key Parameters
+- **`token`**: Your bot token. You can also use an environment variable with `readEnv: <environment name>`.
+- **`prefix`**: The bot's command prefix.
+- **`commands`**: A list of configured commands.
 
-#### Commands
-Inside the "commands" key you must enter a list valued by a object
+---
+
+## 📜 Commands Format
+Each command inside the `commands` list must be an object with the following format:
+
 ```json
-{"name": "command name", "trigger": [], "variables": {}}
+{
+    "name": "command name", 
+    "trigger": [], 
+    "variables": {}
+}
 ```
-##### Trigger
-To do something, you must enter a trigger keys inside the commands object
-###### Trigger Type
-- **sendMessage**: You can send message with it.
-    Parameter:
-        - value: The message, you can use variable with `$variable_name`
-- **else**: Read the documentation at the bottom of this readme
-##### Variables
-The variables are a script or text that will replace the message
+
+### 🔥 Triggers
+Triggers define how the bot responds. A command object must include one or more trigger keys.
+
+#### 🎯 Trigger Types
+- **`sendMessage`**: Sends a message. 
+  - **Parameter**: `value` – The message text (supports variables using `$variable_name`).
+- **`else`**: More details in the full documentation.
+
+### 📌 Variables
+Variables store reusable values that can be used inside messages or scripts.
+
 ```json
 "variables": {
     "$variablename": "text, script, or scriptv2"
 }
 ```
-###### Variables Type
-- **text**
-- **script**:
-How to use? As a value, you can enter it with `script: %function(parameters)`. It will replace the variable in message with the function result
-- **scriptv2**:
-What is the difference? The difference between script and scriptv2 just, script can only run 1 function but scriptv2 can run more function
-###### Example
-- **scriptv2**
-```json
-"$variablename": "scriptv2: %user.name is cool, %user.mention"
-```
-- **script**
-```json
-"$variablename": "script": "%user.name"
-```
-# Functions
-## Random
-### - number(from:integer; to:integer)
-#### Return a random number
-#### %random.number(1, 100)
 
-### - string(choices)
-#### Return a random text
-#### %random.string(choice1; choice2; choice3; untilInfinity)
+#### 🔹 Variable Types
+- **`text`**: Plain text.
+- **`script`**: Uses functions, formatted as `script: %function(parameters)`, replacing the variable with the function result.
+- **`scriptv2`**: Supports multiple functions in one variable.
 
-### - random()
-#### Return a random float
-#### %random.random()
+#### 📍 Example Usage
+- **`scriptv2`**:
+  ```json
+  "$variablename": "scriptv2: %user.name is cool, %user.mention"
+  ```
+- **`script`**:
+  ```json
+  "$variablename": "script: %user.name"
+  ```
 
-## String
-### - lower(text:string)
-#### Return the text but in lower
-#### %string.lower(mY sTrInG) | out: my string 
+---
 
-### - upper(text:string)
-#### Return the text but in upper
-#### %string.upper(my string) | out: MY STRING
+# ⚡ Available Functions
 
-### - capitalize(text:string)
-#### Return the text but in capitalize
-#### %string.capitalize(my string) | out: My string
+## 🎲 Random
+- **`random.number(from, to)`** → Returns a random number.
+  ```
+  %random.number(1, 100)
+  ```
+- **`random.string(choices)`** → Returns a random choice.
+  ```
+  %random.string(choice1; choice2; choice3)
+  ```
+- **`random.random()`** → Returns a random float.
+  ```
+  %random.random()
+  ```
 
-## Message
-### - getArg(index:integer)
-### Return the argument using the index
-### %message.getArg(1)
+## 🔡 String Manipulation
+- **`string.lower(text)`** → Converts text to lowercase.
+  ```
+  %string.lower(HeLLo) → hello
+  ```
+- **`string.upper(text)`** → Converts text to uppercase.
+  ```
+  %string.upper(hello) → HELLO
+  ```
+- **`string.capitalize(text)`** → Capitalizes the text.
+  ```
+  %string.capitalize(hello world) → Hello world
+  ```
 
-### - author.name()
-### Return the author name
-### %message.author.name()
+## 📩 Message
+- **`message.getArg(index)`** → Returns the nth argument of a command.
+  ```
+  %message.getArg(1)
+  ```
+- **`message.author.name()`** → Returns the author's name.
+  ```
+  %message.author.name()
+  ```
+- **`message.author.id()`** → Returns the author's ID.
+  ```
+  %message.author.id()
+  ```
+- **`message.author.mention()`** → Mentions the author.
+  ```
+  %message.author.mention()
+  ```
+- **`message.author.avatarUrl()`** → Returns the author's avatar URL.
+  ```
+  %message.author.avatarUrl()
+  ```
 
-### - author.id()
-### Return the author id
-### %message.author.id()
+## ⏳ Time
+- **`time.unix()`** → Returns the current UNIX timestamp.
+  ```
+  %time.unix()
+  ```
 
-### - author.mention()
-### Return the author mention
-### %message.author.mention()
+## 🧮 Math
+- **`math.count(expression)`** → Evaluates a mathematical expression.
+  ```
+  %math.count(1 + 2 * 3)
+  ```
 
-### - author.avatarUrl()
-### Return the author avatar url
-### %message.author.avatarUrl()
+## 🌍 Requests
+- **`requests.get.json(url, key)`** → Fetches JSON data from an API.
+  ```
+  %requests.get.json(https://api.example.com/data, result)
+  ```
+- **`requests.get.text(url)`** → Fetches text data from an API.
+  ```
+  %requests.get.text(https://api.example.com/data)
+  ```
 
-## Time
-### - unix()
-### Return the unix time (how many seconds from `00:00:00 UTC January 1 1970`)
-### %time.unix()
+## ✅ Check Functions
+- **`check.string(value)`** → Checks if a value is a string.
+  ```
+  %check.string(1234) → false
+  ```
+- **`check.integer(value)`** → Checks if a value is an integer.
+  ```
+  %check.integer(1234) → true
+  ```
 
-## Math
-### - count(math)
-### Count math
-### %math.count(1 + 6 * 65 ^ 3/4 ** (12.3 / 0.1) - 1 // 70)
+---
 
-## Requests
-### - get.json(url; key)
-### Make a request and get the json result
-### %requests.get.json(https://myapi.com/api?key=yes; result)
-
-### - get.text(url)
-### Make a request and get the text result
-### %requests.get.text(https://myapi.com/api?key=yes)
-
-## Check
-### - string(something)
-### Check if the argument are string. It will return true or false
-### %check.string(1232) | out: false
-
-### - integer(something)
-### Check if the argument are integer. It will return true or false
-### %check.integer(1234) | out: true
-
-# Trigger Types
-Coming Soon
+## ⚡ Trigger Types (Coming Soon!)
